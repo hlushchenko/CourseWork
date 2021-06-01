@@ -20,9 +20,10 @@ namespace CourseWork
         public void Show()
         {
             _fields = new List<TextBox>();
+            WrapPanel.Children.Clear();
             for (int i = 1; i <= Count; i++)
             {
-                StackPanel stackPanel = new StackPanel {Orientation = Orientation.Horizontal};
+                StackPanel stackPanel = new StackPanel {Orientation = Orientation.Horizontal, Margin = new Thickness(0, 5, 0, 0)};
                 var field = new TextBox {Width = 30, Height = 20, TextAlignment = TextAlignment.Right};
                 _fields.Add(field);
                 stackPanel.Children.Add(field);

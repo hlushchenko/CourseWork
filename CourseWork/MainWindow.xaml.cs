@@ -20,16 +20,86 @@ namespace CourseWork
     /// </summary>
     public partial class MainWindow : Window
     {
+        public Calculator Calculator;
         public MainWindow()
         {
+            Calculator = new Calculator();
             InitializeComponent();
+            BisectionRadioButton.IsChecked = true;
+        }
+        
+        private void PolynomialSizeInput_OnTextChanged(object sender, TextChangedEventArgs e)
+        {
+            int size = 0;
+            if (int.TryParse(PolynomialSizeInput.Text, out size))
+            {
+                if (size>16)
+                {
+                    size = 16;
+                    PolynomialSizeInput.Text = "16";
+                }
+                Box.Count = size+1;
+            }
+            else
+            {
+                Box.Count = 0;
+            }
             Box.Show();
         }
+        
+        
 
+        #region RadioButtons
+
+        private void BisectionRadioButton_OnChecked(object sender, RoutedEventArgs e)
+        {
+            Calculator.MethodSelected = Calculator.Method.Bisection;
+            RightArgumensPanel.Visibility = Visibility.Visible;
+            StartValueTextBlock.Visibility = Visibility.Collapsed;
+            LeftLimitTextBlock.Visibility = Visibility.Visible;
+        }
+
+        private void NewtonRadioButton_OnChecked(object sender, RoutedEventArgs e)
+        {
+            Calculator.MethodSelected = Calculator.Method.Newton;
+            LeftLimitTextBlock.Visibility = Visibility.Collapsed;
+            StartValueTextBlock.Visibility = Visibility.Visible;
+            RightArgumensPanel.Visibility = Visibility.Collapsed;
+        }
+
+        private void SecantRadioButton_OnChecked(object sender, RoutedEventArgs e)
+        {
+            Calculator.MethodSelected = Calculator.Method.Secant;
+            LeftLimitTextBlock.Visibility = Visibility.Visible;
+            StartValueTextBlock.Visibility = Visibility.Collapsed;
+            RightArgumensPanel.Visibility = Visibility.Visible;
+        }
+
+        #endregion
 
         private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show(Box.Value.ToString());
+            
+            if (!double.TryParse(LeftLimitTextBox.Text,out Calculator.Left))
+            {
+                Calculator.Left = 0;
+            }
+            if (!double.TryParse(RightLimitTextBox.Text,out Calculator.Right))
+            {
+                Calculator.Right = 0;
+            }
+            
+            Calculator._polynomial = Box.Value;
+            List<double> values = new List<double>();
+            if (Calculator.Left < Calculator.Right)
+            {
+                for (double i = Calculator.Left; i <= Calculator.Right; i += (Calculator.Right-Calculator.Left)/10)
+                {
+                    values.Add(Calculator._polynomial.Value(i));
+                }
+            }
+            MainChart.Add(values.ToArray(), Calculator.Left, Calculator.Right);
         }
+        
     }
 }

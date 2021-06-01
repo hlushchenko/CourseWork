@@ -5,9 +5,53 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CourseWork"
         mc:Ignorable="d"
-        Title="Розв'язання нелінійних алгебраїчних рівнянь" Height="450" Width="800">
-    <Grid x:Name="MainGrid">
-        <local:PolynomBox x:Name="Box" Count = "3"></local:PolynomBox>
-        <Button Click="ButtonBase_OnClick" Width="40" Height="30"/>
-    </Grid>
+        Title="Розв'язання нелінійних алгебраїчних рівнянь" Height="450" Width="800"
+        MinWidth="450"
+        MinHeight="200">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <Grid x:Name="MainGrid">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <StackPanel Grid.Column="0" Margin="10 10 10 0">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock>Введіть степінь⩽16 поліному:</TextBlock>
+                    <TextBox x:Name="PolynomialSizeInput" Width="20" MaxLength="2" Margin="10 0 0 0"
+                             TextChanged="PolynomialSizeInput_OnTextChanged" />
+                </StackPanel>
+                <local:PolynomBox x:Name="Box" />
+                <TextBlock Margin="0 20 0 0">Оберіть метод</TextBlock>
+                <RadioButton x:Name="BisectionRadioButton" GroupName="Methods"
+                             Checked="BisectionRadioButton_OnChecked">
+                    Метод бісекції
+                </RadioButton>
+                <RadioButton x:Name="NewtonRadioButton" GroupName="Methods" Checked="NewtonRadioButton_OnChecked">
+                    Метод Ньютона
+                </RadioButton>
+                <RadioButton x:Name="SecantRadioButton" GroupName="Methods" Checked="SecantRadioButton_OnChecked">
+                    Метод січних
+                </RadioButton>
+                <WrapPanel Margin="10">
+                    <StackPanel x:Name="LeftArgumensPanel" Orientation="Horizontal">
+                        <TextBlock x:Name="LeftLimitTextBlock">Ліва межа:</TextBlock>
+                        <TextBlock x:Name="StartValueTextBlock" Visibility="Collapsed">Початкове значення:</TextBlock>
+                        <TextBox x:Name="LeftLimitTextBox" MinWidth="30" Margin="10,0,10,0"></TextBox>
+                    </StackPanel>
+                    <StackPanel x:Name="RightArgumensPanel" Orientation="Horizontal">
+                        <TextBlock x:Name="RightLimitTextBlock">Права межа:</TextBlock>
+                        <TextBox x:Name="RightLimitTextBox" MinWidth="30" Margin="10,0,10,0"></TextBox>
+                    </StackPanel>
+                    <StackPanel x:Name="AccuracyPanel" Orientation="Horizontal">
+                        <TextBlock x:Name="AccuracyTextBlock">Точність ε:</TextBlock>
+                        <TextBox x:Name="AccuracyTextBox" MinWidth="30" Margin="10,0,10,0"></TextBox>
+                    </StackPanel>
+                </WrapPanel>
+                <Button MaxWidth="200" MinHeight="40" Margin="10" Click="ButtonBase_OnClick">
+                    Обчислити
+                </Button>
+            </StackPanel>
+            <local:Chart Grid.Column="1" x:Name="MainChart"> </local:Chart>
+        </Grid>
+    </ScrollViewer>
 </Window>
