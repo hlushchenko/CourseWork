@@ -1,17 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace CourseWork
 {
@@ -21,33 +10,35 @@ namespace CourseWork
     public partial class MainWindow : Window
     {
         public Calculator Calculator;
+
         public MainWindow()
         {
             Calculator = new Calculator();
             InitializeComponent();
             BisectionRadioButton.IsChecked = true;
         }
-        
+
         private void PolynomialSizeInput_OnTextChanged(object sender, TextChangedEventArgs e)
         {
             int size = 0;
             if (int.TryParse(PolynomialSizeInput.Text, out size))
             {
-                if (size>16)
+                if (size > 16)
                 {
                     size = 16;
                     PolynomialSizeInput.Text = "16";
                 }
-                Box.Count = size+1;
+
+                Box.Count = size + 1;
             }
             else
             {
                 Box.Count = 0;
             }
+
             Box.Show();
         }
-        
-        
+
 
         #region RadioButtons
 
@@ -77,22 +68,35 @@ namespace CourseWork
 
         #endregion
 
-        private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
+        private void CalculateButton_OnClick(object sender, RoutedEventArgs e)
         {
-            
-            if (!double.TryParse(LeftLimitTextBox.Text,out Calculator.Left))
-            {
+            if (double.TryParse(LeftLimitTextBox.Text.Replace('.', ','), out var left))
+                Calculator.Left = left;
+            else
                 Calculator.Left = 0;
-            }
-            if (!double.TryParse(RightLimitTextBox.Text,out Calculator.Right))
-            {
+            if (double.TryParse(RightLimitTextBox.Text.Replace('.', ','), out var right))
+                Calculator.Right = right;
+            else
                 Calculator.Right = 0;
-            }
+            if (double.TryParse(AccuracyTextBox.Text.Replace('.', ','), out var accuracy))
+                Calculator.Accuracy = accuracy;
+            else
+                Calculator.Accuracy = 0.1;
             
-            Calculator._polynomial = Box.Value;
-            List<double> values = new List<double>();
-            MainChart.Add(Calculator._polynomial.Values(Calculator.Left, Calculator.Right, 10), Calculator.Left, Calculator.Right);
+            Calculator.Polynomial = Box.Value;
+            MainChart.Add(Calculator.Polynomial.Values(Calculator.Left, Calculator.Right, 10), Calculator.Left,
+                Calculator.Right);
+            double? result = Calculator.Calculate();
+            if (result != null)
+            {
+                MainChart.AddSolution((double) result, Calculator.Polynomial.Value((double) result));
+                ResultTextBlock.Text = "Результат: " + result;
+            }
+            else
+            {
+                MainChart.ClearSolution();
+                ResultTextBlock.Text = "Неможливо знайти корінь";
+            }
         }
-        
     }
 }

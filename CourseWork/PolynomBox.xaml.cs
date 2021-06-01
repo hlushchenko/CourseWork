@@ -23,7 +23,8 @@ namespace CourseWork
             WrapPanel.Children.Clear();
             for (int i = 1; i <= Count; i++)
             {
-                StackPanel stackPanel = new StackPanel {Orientation = Orientation.Horizontal, Margin = new Thickness(0, 5, 0, 0)};
+                StackPanel stackPanel = new StackPanel
+                    {Orientation = Orientation.Horizontal, Margin = new Thickness(0, 5, 0, 0)};
                 var field = new TextBox {Width = 30, Height = 20, TextAlignment = TextAlignment.Right};
                 _fields.Add(field);
                 stackPanel.Children.Add(field);
@@ -49,24 +50,29 @@ namespace CourseWork
             return output;
         }
 
-        public Polynomial Value {
+        public Polynomial Value
+        {
             get
             {
                 List<double> polynomial = new List<double>();
-                foreach (var field in _fields)
+                if (_fields != null)
                 {
-                    string currString = field.Text.Replace('.', ',');
-                    double curr = 0;
-                    if (double.TryParse(currString, out curr) )
+                    foreach (var field in _fields)
                     {
-                        polynomial.Add(curr);
+                        string currString = field.Text.Replace('.', ',');
+                        double curr = 0;
+                        if (double.TryParse(currString, out curr))
+                        {
+                            polynomial.Add(curr);
+                        }
+                        else
+                        {
+                            polynomial.Add(0);
+                        }
                     }
-                    else
-                    {
-                        polynomial.Add(0);
-                    }
+                    return new Polynomial(polynomial.ToArray());
                 }
-                return new Polynomial(polynomial.ToArray());
+                return new Polynomial(0);
             }
         }
     }

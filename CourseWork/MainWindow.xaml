@@ -47,9 +47,10 @@
                         <TextBox x:Name="AccuracyTextBox" MinWidth="30" Margin="10,0,10,0"></TextBox>
                     </StackPanel>
                 </WrapPanel>
-                <Button MaxWidth="200" MinHeight="40" Margin="10" Click="ButtonBase_OnClick">
+                <Button x:Name="CalculateButton" MaxWidth="200" MinHeight="40" Margin="10" Click="CalculateButton_OnClick">
                     Обчислити
                 </Button>
+                <TextBlock x:Name="ResultTextBlock" FontSize = "30"></TextBlock>
             </StackPanel>
             <local:Chart Grid.Column="1" x:Name="MainChart"> </local:Chart>
         </Grid>
