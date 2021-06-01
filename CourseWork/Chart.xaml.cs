@@ -15,6 +15,7 @@ namespace CourseWork
         public Chart()
         {
             _series = new LineSeries();
+            _series.Title = "graph";
             _series.Values = new ChartValues<ObservablePoint>();
             _series.Fill = Brushes.Transparent;
             _series.PointGeometrySize = 0;
@@ -35,7 +36,6 @@ namespace CourseWork
                     _series.Values.Add(new ObservablePoint(leftLimit + delta * i, values[i]));
                 }
             }
-            
         }
     }
 }

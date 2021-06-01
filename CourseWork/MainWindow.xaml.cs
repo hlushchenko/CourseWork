@@ -91,14 +91,7 @@ namespace CourseWork
             
             Calculator._polynomial = Box.Value;
             List<double> values = new List<double>();
-            if (Calculator.Left < Calculator.Right)
-            {
-                for (double i = Calculator.Left; i <= Calculator.Right; i += (Calculator.Right-Calculator.Left)/10)
-                {
-                    values.Add(Calculator._polynomial.Value(i));
-                }
-            }
-            MainChart.Add(values.ToArray(), Calculator.Left, Calculator.Right);
+            MainChart.Add(Calculator._polynomial.Values(Calculator.Left, Calculator.Right, 10), Calculator.Left, Calculator.Right);
         }
         
     }
