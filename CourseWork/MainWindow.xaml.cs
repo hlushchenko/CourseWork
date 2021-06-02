@@ -46,8 +46,11 @@ namespace CourseWork
         {
             Calculator.MethodSelected = Calculator.Method.Bisection;
             RightArgumensPanel.Visibility = Visibility.Visible;
+            RightLimitTextBlock.Visibility = Visibility.Visible;
             StartValueTextBlock.Visibility = Visibility.Collapsed;
             LeftLimitTextBlock.Visibility = Visibility.Visible;
+            RightSecantTextBlock.Visibility = Visibility.Collapsed;
+            LeftSecantTextBlock.Visibility = Visibility.Collapsed;
         }
 
         private void NewtonRadioButton_OnChecked(object sender, RoutedEventArgs e)
@@ -55,21 +58,27 @@ namespace CourseWork
             Calculator.MethodSelected = Calculator.Method.Newton;
             LeftLimitTextBlock.Visibility = Visibility.Collapsed;
             StartValueTextBlock.Visibility = Visibility.Visible;
+            LeftSecantTextBlock.Visibility = Visibility.Collapsed;
             RightArgumensPanel.Visibility = Visibility.Collapsed;
         }
 
         private void SecantRadioButton_OnChecked(object sender, RoutedEventArgs e)
         {
-            Calculator.MethodSelected = Calculator.Method.Secant;
-            LeftLimitTextBlock.Visibility = Visibility.Visible;
-            StartValueTextBlock.Visibility = Visibility.Collapsed;
             RightArgumensPanel.Visibility = Visibility.Visible;
+            Calculator.MethodSelected = Calculator.Method.Secant;
+            RightLimitTextBlock.Visibility = Visibility.Collapsed;
+            LeftLimitTextBlock.Visibility = Visibility.Collapsed;
+            StartValueTextBlock.Visibility = Visibility.Collapsed;
+            RightSecantTextBlock.Visibility = Visibility.Visible;
+            RightLimitTextBox.Visibility = Visibility.Visible;
+            LeftSecantTextBlock.Visibility = Visibility.Visible;
         }
 
         #endregion
 
         private void CalculateButton_OnClick(object sender, RoutedEventArgs e)
         {
+            double leftGraphBound, rightGraphBound;
             if (double.TryParse(LeftLimitTextBox.Text.Replace('.', ','), out var left))
                 Calculator.Left = left;
             else
@@ -82,19 +91,34 @@ namespace CourseWork
                 Calculator.Accuracy = accuracy;
             else
                 Calculator.Accuracy = 0.1;
-            
+            if (!double.TryParse(GraphLeftTextBox.Text.Replace('.', ','), out leftGraphBound))
+            {
+                leftGraphBound = -1;
+                GraphLeftTextBox.Text = "-1";
+            }
+
+            if (!double.TryParse(GraphRightTextBox.Text.Replace('.', ','), out rightGraphBound))
+            {
+                rightGraphBound = 1;
+                GraphRightTextBox.Text = "1";
+            }
+
             Calculator.Polynomial = Box.Value;
-            MainChart.Add(Calculator.Polynomial.Values(Calculator.Left, Calculator.Right, 10), Calculator.Left,
-                Calculator.Right);
+            MainChart.Add(Calculator.Polynomial.Values(rightGraphBound, leftGraphBound, 10), leftGraphBound,
+                rightGraphBound);
             double? result = Calculator.Calculate();
+            MainChart.ClearSolution();
             if (result != null)
             {
-                MainChart.AddSolution((double) result, Calculator.Polynomial.Value((double) result));
+                if ((double) result <= rightGraphBound && (double) result >= leftGraphBound)
+                {
+                    MainChart.AddSolution((double) result, Calculator.Polynomial.Value((double) result));
+                }
+
                 ResultTextBlock.Text = "Результат: " + result;
             }
             else
             {
-                MainChart.ClearSolution();
                 ResultTextBlock.Text = "Неможливо знайти корінь";
             }
         }
