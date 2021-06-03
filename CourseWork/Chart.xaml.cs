@@ -1,14 +1,11 @@
-﻿using System;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Media;
+﻿using System.Windows.Media;
 using LiveCharts;
 using LiveCharts.Defaults;
 using LiveCharts.Wpf;
 
 namespace CourseWork
 {
-    public partial class Chart : UserControl
+    public partial class Chart
     {
         private LineSeries _graph;
         private LineSeries _solution;
@@ -30,6 +27,9 @@ namespace CourseWork
             MainChart.AxisX[0].LabelFormatter = value => $"{value:F1}";
             MainChart.Series = new SeriesCollection {_graph, _solution};
         }
+        /// <summary>
+        /// Будує графік за вказаними точками у вказаних межах 
+        /// </summary>
         
         public void Add(double[] values, double leftLimit, double rightLimit)
         {
@@ -38,16 +38,21 @@ namespace CourseWork
             _graph.Values.Clear();
             for (int i = 0; i < values.Length; i++)
             {
-                _graph.Values.Add(new ObservablePoint(leftLimit + delta * i, values[i]));
+                _graph.Values.Add(new ObservablePoint(leftLimit + delta * i, values[^(i+1)]));
             }
         }
-
+        /// <summary>
+        /// Відображає на графіку точку, яка є коренем даного поліному
+        /// </summary>
         public void AddSolution(double x, double y)
         {
             ClearSolution();
             _solution.Values.Add(new ObservablePoint(x, y));
         }
 
+        /// <summary>
+        /// Очищає графік від відображених точок – коренів поліному
+        /// </summary>
         public void ClearSolution()
         {
             _solution.Values.Clear();

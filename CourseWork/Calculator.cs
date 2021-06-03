@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Windows;
 
 namespace CourseWork
 {
@@ -10,8 +9,6 @@ namespace CourseWork
         private double _right;
         private double _accuracy;
         
-        
-
         public double Left
         {
             get => _left;
@@ -78,7 +75,10 @@ namespace CourseWork
             Newton,
             Secant,
         }
-
+        
+        /// <summary>
+        /// Повертає точку – розв’язок поліноміального рівняння
+        /// </summary>
         public double? Calculate()
         {
             double? result = 0;
@@ -98,7 +98,9 @@ namespace CourseWork
             if (result != null) result = Math.Round((double) result, (int)-Math.Log10(Accuracy), MidpointRounding.ToEven);
             return result;
         }
-
+        /// <summary>
+        /// Повертає точку – розв’язок поліноміального рівняння методом бісекції
+        /// </summary>
         private double? Bisection()
         {
             double middle = 0;
@@ -115,6 +117,9 @@ namespace CourseWork
             return middle;
         }
         
+        /// <summary>
+        /// Повертає точку – розв’язок поліноміального рівняння методом Ньютона
+        /// </summary>
         private double Newton()
         {
             Polynomial derivative = Polynomial.Derivative();
@@ -128,7 +133,10 @@ namespace CourseWork
             return x1;
         }
         
-        public double? Secant()
+        /// <summary>
+        /// Повертає точку – розв’язок поліноміального рівняння
+        /// </summary>
+        private double? Secant()
         {
             if (Math.Sign(Polynomial.Value(Left)) == Math.Sign(Polynomial.Value(Right))) return null;
             while (Math.Abs(Left-Right) > Accuracy/10)

@@ -6,7 +6,7 @@ using System.Windows.Controls;
 
 namespace CourseWork
 {
-    public partial class PolynomBox : UserControl
+    public partial class PolynomBox 
     {
         private List<TextBox> _fields;
 
@@ -16,7 +16,9 @@ namespace CourseWork
         {
             InitializeComponent();
         }
-
+        /// <summary>
+        /// Відображає у вікні користувацький елемент для вводу поліному
+        /// </summary>
         public void Show()
         {
             _fields = new List<TextBox>();
@@ -37,7 +39,9 @@ namespace CourseWork
                 WrapPanel.Children.Add(stackPanel);
             }
         }
-
+        /// <summary>
+        /// Створює об’єкт класу TextBlock зі  значенням виду x^i, де i – заданий степінь
+        /// </summary>
         private static TextBlock PowerGenerator(int i)
         {
             TextBlock output = new TextBlock {FontSize = 14};
@@ -49,7 +53,9 @@ namespace CourseWork
             output.Text += " + ";
             return output;
         }
-
+        /// <summary>
+        /// Повертає введений поліном
+        /// </summary>
         public Polynomial Value
         {
             get

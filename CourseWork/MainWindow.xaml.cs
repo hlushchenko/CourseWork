@@ -7,17 +7,20 @@ namespace CourseWork
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow
     {
-        public Calculator Calculator;
+        private Calculator _calculator;
 
         public MainWindow()
         {
-            Calculator = new Calculator();
+            _calculator = new Calculator();
             InitializeComponent();
             BisectionRadioButton.IsChecked = true;
         }
-
+        
+        /// <summary>
+        /// Опрацювання події зміни даних у текстовому файлі
+        /// </summary>
         private void PolynomialSizeInput_OnTextChanged(object sender, TextChangedEventArgs e)
         {
             int size = 0;
@@ -39,12 +42,15 @@ namespace CourseWork
             Box.Show();
         }
 
-
+        /// <summary>
+        /// Опрацювання подій для вибору методу
+        /// </summary>
+        
         #region RadioButtons
 
         private void BisectionRadioButton_OnChecked(object sender, RoutedEventArgs e)
         {
-            Calculator.MethodSelected = Calculator.Method.Bisection;
+            _calculator.MethodSelected = Calculator.Method.Bisection;
             RightArgumensPanel.Visibility = Visibility.Visible;
             RightLimitTextBlock.Visibility = Visibility.Visible;
             StartValueTextBlock.Visibility = Visibility.Collapsed;
@@ -55,7 +61,7 @@ namespace CourseWork
 
         private void NewtonRadioButton_OnChecked(object sender, RoutedEventArgs e)
         {
-            Calculator.MethodSelected = Calculator.Method.Newton;
+            _calculator.MethodSelected = Calculator.Method.Newton;
             LeftLimitTextBlock.Visibility = Visibility.Collapsed;
             StartValueTextBlock.Visibility = Visibility.Visible;
             LeftSecantTextBlock.Visibility = Visibility.Collapsed;
@@ -65,7 +71,7 @@ namespace CourseWork
         private void SecantRadioButton_OnChecked(object sender, RoutedEventArgs e)
         {
             RightArgumensPanel.Visibility = Visibility.Visible;
-            Calculator.MethodSelected = Calculator.Method.Secant;
+            _calculator.MethodSelected = Calculator.Method.Secant;
             RightLimitTextBlock.Visibility = Visibility.Collapsed;
             LeftLimitTextBlock.Visibility = Visibility.Collapsed;
             StartValueTextBlock.Visibility = Visibility.Collapsed;
@@ -75,22 +81,25 @@ namespace CourseWork
         }
 
         #endregion
-
+        
+        /// <summary>
+        /// Опрацювання події натискання на кнопку
+        /// </summary>
         private void CalculateButton_OnClick(object sender, RoutedEventArgs e)
         {
             double leftGraphBound, rightGraphBound;
             if (double.TryParse(LeftLimitTextBox.Text.Replace('.', ','), out var left))
-                Calculator.Left = left;
+                _calculator.Left = left;
             else
-                Calculator.Left = 0;
+                _calculator.Left = 0;
             if (double.TryParse(RightLimitTextBox.Text.Replace('.', ','), out var right))
-                Calculator.Right = right;
+                _calculator.Right = right;
             else
-                Calculator.Right = 0;
+                _calculator.Right = 0;
             if (double.TryParse(AccuracyTextBox.Text.Replace('.', ','), out var accuracy))
-                Calculator.Accuracy = accuracy;
+                _calculator.Accuracy = accuracy;
             else
-                Calculator.Accuracy = 0.1;
+                _calculator.Accuracy = 0.1;
             if (!double.TryParse(GraphLeftTextBox.Text.Replace('.', ','), out leftGraphBound))
             {
                 leftGraphBound = -1;
@@ -103,16 +112,23 @@ namespace CourseWork
                 GraphRightTextBox.Text = "1";
             }
 
-            Calculator.Polynomial = Box.Value;
-            MainChart.Add(Calculator.Polynomial.Values(rightGraphBound, leftGraphBound, 10), leftGraphBound,
+            if (leftGraphBound > rightGraphBound)
+            {
+                double temp = leftGraphBound;
+                leftGraphBound = rightGraphBound;
+                rightGraphBound = temp;
+            }
+
+            _calculator.Polynomial = Box.Value;
+            MainChart.Add(_calculator.Polynomial.Values(rightGraphBound, leftGraphBound, 10), leftGraphBound,
                 rightGraphBound);
-            double? result = Calculator.Calculate();
+            double? result = _calculator.Calculate();
             MainChart.ClearSolution();
             if (result != null)
             {
                 if ((double) result <= rightGraphBound && (double) result >= leftGraphBound)
                 {
-                    MainChart.AddSolution((double) result, Calculator.Polynomial.Value((double) result));
+                    MainChart.AddSolution((double) result, _calculator.Polynomial.Value((double) result));
                 }
 
                 ResultTextBlock.Text = "Результат: " + result;

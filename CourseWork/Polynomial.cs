@@ -12,7 +12,10 @@ namespace CourseWork
             _coefficient = coefficient;
         }
 
-
+        /// <summary>
+        /// Повертає значення поліному в певній точці
+        /// </summary>
+        
         public double Value(double x)
         {
             double value = 0;
@@ -23,7 +26,10 @@ namespace CourseWork
 
             return value;
         }
-
+        
+        /// <summary>
+        /// Повертає масив точок на певному проміжку
+        /// </summary>
         public double[] Values(double left, double right, int count)
         {
             double delta = (right - left) / (count - 1);
@@ -35,6 +41,10 @@ namespace CourseWork
             return values.ToArray();
         }
 
+        /// <summary>
+        /// Повертає похідну полінома
+        /// </summary>
+        
         public Polynomial Derivative()
         {
             double[] newCoefficient = new double[_coefficient.Length - 1];
@@ -45,7 +55,7 @@ namespace CourseWork
 
             return new Polynomial(newCoefficient);
         }
-
+        
         public override string ToString()
         {
             string output = string.Empty;
